@@ -34,7 +34,7 @@ color_class = {
     '事業所（静岡県湖西市）':'lightgreen',
     '事業所（静岡県牧之原市）':'limegreen',
     '工場（静岡県牧之原市）':'pink',
-    '工場（静岡県磐田市)':'yellow',
+    '工場（静岡県磐田市）':'yellow',
     '工場（静岡県浜松市北区）':'green',
     '工場（静岡県掛川市）':'gray',
     '事業所（東京都練馬区）':'orange',
@@ -192,6 +192,7 @@ fig = px.bar(
     data_frame = cumsum_data,
     x = '陽性確定',
     y = '拠点',
+    text = '陽性確定',
     color = '拠点',
     labels = {'陽性確定':'累計感染者数（人）'},
     color_discrete_map = color_class
