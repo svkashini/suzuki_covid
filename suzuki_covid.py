@@ -27,6 +27,19 @@ location = pd.DataFrame([
     ['事業所（東京都練馬区）', 35.6630485838581, 139.75786500182355]
 ], columns=['拠点', 'lat', 'long'])
 
+#グラフ表示の設定
+color_class = {
+    '本社（静岡県浜松市南区）':'red',
+    '工場（静岡県湖西市）':'blue',
+    '事業所（静岡県湖西市）':'lightgreen',
+    '事業所（静岡県牧之原市）':'limegreen',
+    '工場（静岡県牧之原市）':'pink',
+    '工場（静岡県磐田市)':'yellow',
+    '工場（静岡県浜松市北区）':'green',
+    '工場（静岡県掛川市）':'gray',
+    '事業所（東京都練馬区）':'orange',
+}
+
 
 #スズキ株式会社のコロナ感染者公表ページ
 url = 'https://www.suzuki.co.jp/release/d/2020/covid19/'
@@ -164,12 +177,26 @@ fig = px.bar(
     y = '陽性確定',
     color = '拠点',
     labels = {'陽性確定':'陽性者数(人)'},
-    range_x = [start_date, end_date] #デフォルトは直近60日間
+    range_x = [start_date, end_date],
+    color_discrete_map = color_class
 )
-
 st.plotly_chart(fig)
 
-display_data = suzuki_covid2.sort_values('陽性確定日').reset_index(drop=True)
+output_data_range = output_data[(output_data['陽性確定日']>= datetime.datetime.combine(start_date, datetime.time())) & (output_data['陽性確定日']<=datetime.datetime.combine(end_date, datetime.time()))]
+cumsum_data = output_data_range.groupby(['拠点'], as_index=False).count()[['拠点','陽性確定']].sort_values('陽性確定', ascending=False)
+
+st.subheader('集計期間中の累計感染者数')
+fig = px.bar(
+    data_frame = cumsum_data,
+    x = '陽性確定',
+    y = '拠点',
+    color = '拠点',
+    labels = {'陽性確定':'累計感染者数（人）'},
+    color_discrete_map = color_class
+)
+st.plotly_chart(fig)
+
+display_data = output_data_range.sort_values('陽性確定日').reset_index(drop=True)
 
 st.subheader('感染者データ')
 st.dataframe(display_data)
