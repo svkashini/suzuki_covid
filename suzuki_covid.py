@@ -174,7 +174,7 @@ display_data = suzuki_covid2.sort_values('陽性確定日').reset_index(drop=Tru
 st.subheader('感染者データ')
 st.dataframe(display_data)
 st.download_button(
-    label='データをダウンロード',
+    label='データをcsvでダウンロード',
     data=display_data.to_csv(),
     file_name='suzuki_covid.csv',
     mime='text/csv'
