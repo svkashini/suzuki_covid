@@ -201,10 +201,10 @@ st.plotly_chart(fig)
 display_data = output_data_range.sort_values('陽性確定日').reset_index(drop=True)
 
 st.subheader('感染者データ')
-st.dataframe(display_data)
+st.dataframe(display_data[['拠点', '陽性確定', '最終出社','職場消毒']])
 st.download_button(
     label='データをcsvでダウンロード',
-    data=display_data.to_csv(),
+    data=display_data[['拠点', '陽性確定', '最終出社','職場消毒']].to_csv(),
     file_name='suzuki_covid.csv',
     mime='text/csv'
 )
