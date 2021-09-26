@@ -134,7 +134,7 @@ for place in places:
 #####
 #ここからstreamlit表示内容
 #####
-st.title('スズキ株式会社　コロナ感染者数集計')
+st.header('スズキ株式会社　コロナ感染者データ')
 st.text('出典: スズキ株式会社HP内「当社における新型コロナウイルス感染者の発生について」')
 st.text('参照URL: https://www.suzuki.co.jp/release/d/2020/covid19/')
 st.text('注意: 掲載データは作成者が独自に集計したものでありスズキ株式会社の公式発表ではありません')
@@ -157,6 +157,7 @@ end_date = st.sidebar.date_input(
     datetime.date.today()
 )
 
+st.subheader('日当たりの感染者数推移')
 fig = px.bar(
     data_frame = output_data.groupby(['陽性確定日','拠点'], as_index=False).count()[['陽性確定日','拠点','陽性確定']].sort_values('陽性確定日'),
     x = '陽性確定日',
@@ -167,3 +168,14 @@ fig = px.bar(
 )
 
 st.plotly_chart(fig)
+
+display_data = suzuki_covid2.sort_values('陽性確定日').reset_index(drop=True)
+
+st.subheader('感染者データ')
+st.dataframe(display_data)
+st.download_button(
+    label='データをダウンロード',
+    data=display_data.to_csv(),
+    file_name='suzuki_covid.csv',
+    mime='text/csv'
+)
