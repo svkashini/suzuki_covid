@@ -170,8 +170,9 @@ end_date = st.sidebar.date_input(
     datetime.date.today()
 )
 
-st.subheader('日当たりの感染者数推移')
+#日当たりの感染者数推移
 fig = px.bar(
+    title = '日当たりの感染者数推移',
     data_frame = output_data.groupby(['陽性確定日','拠点'], as_index=False).count()[['陽性確定日','拠点','陽性確定']].sort_values('陽性確定日'),
     x = '陽性確定日',
     y = '陽性確定',
@@ -185,8 +186,9 @@ st.plotly_chart(fig)
 output_data_range = output_data[(output_data['陽性確定日']>= datetime.datetime.combine(start_date, datetime.time())) & (output_data['陽性確定日']<=datetime.datetime.combine(end_date, datetime.time()))]
 cumsum_data = output_data_range.groupby(['拠点'], as_index=False).count()[['拠点','陽性確定']].sort_values('陽性確定', ascending=False)
 
-st.subheader('集計期間中の累計感染者数')
+#集計期間中の累計感染者数
 fig = px.bar(
+    title = '集計期間中の累計感染者数',
     data_frame = cumsum_data,
     x = '陽性確定',
     y = '拠点',
