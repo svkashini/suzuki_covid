@@ -51,7 +51,7 @@ html_doc = res.content
 soup = BeautifulSoup(html_doc, 'html.parser')
 
 #感染者情報の表を読み込み
-div_box = soup.find_all('div', class_='boxLine boxTable')
+div_box = soup.find_all('div', class_='scroll')
 
 #Beautiful soupで取得したデータをpandas DataFrameに格納する
 
