@@ -43,40 +43,48 @@ color_class = {
 
 
 #スズキ株式会社のコロナ感染者公表ページ
-url = 'https://www.suzuki.co.jp/release/d/2022/covid19/'
-res = requests.get(url)
+year_hp = ['20', '21', '22']
+df2 = pd.DataFrame() #空のデータフレーム
+url1 = 'https://www.suzuki.co.jp/release/d/20'
+url2 = '/covid19/'
 
-#データの抜き出し
-html_doc = res.content
-soup = BeautifulSoup(html_doc, 'html.parser')
+for y in year_hp:
+    url = url1 + y + url2
+    res = requests.get(url)
 
-#感染者情報の表を読み込み
-div_box = soup.find_all('div', class_='scroll')
+    #データの抜き出し
+    html_doc = res.content
+    soup = BeautifulSoup(html_doc, 'html.parser')
 
-#Beautiful soupで取得したデータをpandas DataFrameに格納する
+    #感染者情報の表を読み込み
+    div_box = soup.find_all('div', class_='scroll')
 
-df = pd.DataFrame() #空のデータフレームを準備
+    #Beautiful soupで取得したデータをpandas DataFrameに格納する
 
-#データフレームのカラム名を辞書で定義
-columns = {0:'拠点',
-           1:'陽性確定',
-           2:'最終出社',
-           3:'職場消毒',
-           4:'工場稼働への影響',
-           5:'特記事項'}
+    df = pd.DataFrame() #空のデータフレームを準備
 
-#各要素をデータフレームに格納
-for i in div_box:
-    temp = []
-    for x in i.find_all(['th', 'td']):
-        if x.name == 'td':
-            temp.append(x.get_text())
-    df_temp = pd.DataFrame(temp).T
-    
-    df = pd.concat([df, df_temp], axis=0)
+    #データフレームのカラム名を辞書で定義
+    columns = {0:'拠点',
+            1:'陽性確定',
+            2:'最終出社',
+            3:'職場消毒',
+            4:'工場稼働への影響',
+            5:'特記事項'}
+
+    #各要素をデータフレームに格納
+    for i in div_box:
+        temp = []
+        for x in i.find_all(['th', 'td']):
+            if x.name == 'td':
+                temp.append(x.get_text())
+        df_temp = pd.DataFrame(temp).T
+        
+        df = pd.concat([df, df_temp], axis=0)
+
+    df2 = pd.concat([df2, df], axis=0)
 
 #不要なインデックスを削除し、カラム名を変更する
-suzuki_covid = df.reset_index().drop(columns='index', axis=1).rename(columns=columns)
+suzuki_covid = df2.reset_index().drop(columns='index', axis=1).rename(columns=columns)
 
 #2020年の公表データには月日しか記載がないため、2021年データと書式を揃えるために「2020年」を追加するスクリプト
 temp = suzuki_covid[~suzuki_covid['陽性確定'].str.contains('年')]
