@@ -43,7 +43,7 @@ color_class = {
 
 
 #スズキ株式会社のコロナ感染者公表ページ
-url = 'https://www.suzuki.co.jp/release/d/2020/covid19/'
+url = 'https://www.suzuki.co.jp/release/d/2022/covid19/'
 res = requests.get(url)
 
 #データの抜き出し
